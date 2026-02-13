@@ -19,11 +19,13 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
     
-    - name: Make gradlew executable
-      run: chmod +x gradlew
+    - name: Setup Gradle
+      uses: gradle/gradle-build-action@v2
+      with:
+        gradle-version: 8.2
     
     - name: Build Debug APK
-      run: ./gradlew assembleDebug --stacktrace
+      run: gradle assembleDebug --stacktrace
     
     - name: Upload APK
       uses: actions/upload-artifact@v4
@@ -38,7 +40,5 @@ jobs:
         tag_name: v1.0.${{ github.run_number }}
         name: Release v1.0.${{ github.run_number }}
         files: app/build/outputs/apk/debug/app-debug.apk
-        draft: false
-        prerelease: false
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
